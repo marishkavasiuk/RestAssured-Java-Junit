@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.franzbecker:gradle-lombok:1.14"
+        classpath "io.qameta.allure:allure-gradle:2.8.1"
+    }
+}
+
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'java'
+apply plugin: 'io.qameta.allure'
+
+
+group 'apiproject'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+
+ext {
+    junitVersion = '5.4.2'
+    restAssuredVersion = '3.0.7'
+    jacksonDatabindVersion = '2.9.5'
+    allureRestAssuredVersion = '2.6.0'
+    slf4jVersion = '1.7.25'
+    logbackClassicVersion = '1.2.3'
+    logbackCoreVersion = '1.2.3'
+    javafaker = '1.0.2'
+}
+
+dependencies {
+    compile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    compile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    compile "io.rest-assured:rest-assured:$restAssuredVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+    compile "io.qameta.allure:allure-rest-assured:$allureRestAssuredVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "ch.qos.logback:logback-classic:$logbackClassicVersion"
+    compile "ch.qos.logback:logback-core:$logbackCoreVersion"
+    compile "com.github.javafaker:javafaker:$javafaker"
+
+
+}
+
+test {
+    useJUnitPlatform {
+        includeTags 'Regression'
+        excludeTags 'Disabled'
+    }
+}
+
+    allure {
+        autoconfigure = true
+        version = '2.7.0'
+        aspectjweaver = true
+
+        useJUnit5 {
+            version = '2.7.0'
+        }
+        resultsDir = file('allure-results')
+        reportDir = file('allure-report')
+
+
+        downloadLink = 'https://dl.bintray.com/qameta/generic/io/qameta/allure/allure/2.7.0/allure-2.7.0.zip'
+    }
+
